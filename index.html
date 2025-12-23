@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Calendário 2026</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    width: 360px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* BOTÕES */
+.botoes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.botoes button {
+    padding: 8px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.botoes button:hover {
+    background: #1e40af;
+}
+
+/* CALENDÁRIO */
+.mes {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.semana, .dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.semana div,
+.dias div {
+    border: 1px solid #333;
+    text-align: center;
+    padding: 10px 0;
+    box-sizing: border-box;
+}
+
+.semana div {
+    background: #e5e7eb;
+    font-weight: bold;
+}
+
+.vazio {
+    background: #f9f9f9;
+}
+
+.evento {
+    background: #fde68a;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- BOTÕES DOS MESES -->
+    <div class="botoes">
+        <button onclick="carregarMes(0)">Jan</button>
+        <button onclick="carregarMes(1)">Fev</button>
+        <button onclick="carregarMes(2)">Mar</button>
+        <button onclick="carregarMes(3)">Abr</button>
+        <button onclick="carregarMes(4)">Mai</button>
+        <button onclick="carregarMes(5)">Jun</button>
+        <button onclick="carregarMes(6)">Jul</button>
+        <button onclick="carregarMes(7)">Ago</button>
+        <button onclick="carregarMes(8)">Set</button>
+        <button onclick="carregarMes(9)">Out</button>
+        <button onclick="carregarMes(10)">Nov</button>
+        <button onclick="carregarMes(11)">Dez</button>
+    </div>
+
+    <!-- CALENDÁRIO -->
+    <div class="mes" id="tituloMes"></div>
+
+    <div class="semana">
+        <div>Dom</div><div>Seg</div><div>Ter</div>
+        <div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+    </div>
+
+    <div class="dias" id="dias"></div>
+
+</div>
+
+<script>
+const ano = 2026;
+const nomesMeses = [
+    "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+    "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+];
+
+const eventos = {}; // armazenar eventos
+
+function carregarMes(mes) {
+    const diasDiv = document.getElementById("dias");
+    const titulo = document.getElementById("tituloMes");
+
+    diasDiv.innerHTML = "";
+    titulo.innerText = nomesMeses[mes] + " de " + ano;
+
+    const primeiroDia = new Date(ano, mes, 1).getDay();
+    const totalDias = new Date(ano, mes + 1, 0).getDate();
+
+    // espaços vazios
+    for (let i = 0; i < primeiroDia; i++) {
+        const div = document.createElement("div");
+        div.classList.add("vazio");
+        diasDiv.appendChild(div);
+    }
+
+    // dias do mês
+    for (let dia = 1; dia <= totalDias; dia++) {
+        const div = document.createElement("div");
+        div.innerText = dia;
+
+        const chave = `${ano}-${mes}-${dia}`;
+
+        if (eventos[chave]) {
+            div.classList.add("evento");
+            div.innerHTML = dia + "<br>" + eventos[chave];
+        }
+
+        div.onclick = () => adicionarEvento(mes, dia);
+        diasDiv.appendChild(div);
+    }
+}
+
+function adicionarEvento(mes, dia) {
+    const texto = prompt("Digite o evento:");
+    if (!texto) return;
+
+    const chave = `${ano}-${mes}-${dia}`;
+    eventos[chave] = texto;
+    carregarMes(mes);
+}
+
+// inicia em janeiro
+carregarMes(0);
+</script>
+
+</body>
+</html>
